@@ -12,10 +12,10 @@ class MarketplaceController extends Controller
     {
         $barangays = Barangay::all();
         
-        // Eager load relationships to prevent database slowdowns
+        // Load active listings and their related farmer/barangay data
         $query = Listing::with(['farmerSubaccount', 'barangay'])->where('is_active', true);
 
-        // Filter by Barangay if selected
+        // Filter by Barangay if the buyer selected one
         if ($request->has('barangay_id') && $request->barangay_id != 'all') {
             $query->where('barangay_id', $request->barangay_id);
         }
