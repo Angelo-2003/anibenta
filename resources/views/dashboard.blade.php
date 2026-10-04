@@ -71,9 +71,8 @@
             </div>
         </form>
     </div>
-@
 
-<!-- Active Orders Section -->
+    <!-- Active Orders Section -->
     <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 max-w-6xl mx-auto mt-8 overflow-x-auto">
         <h2 class="text-xl font-bold mb-4 border-b pb-2">Pending Fulfillment Orders</h2>
         
@@ -134,3 +133,4 @@
             </tbody>
         </table>
     </div>
+@endsection
