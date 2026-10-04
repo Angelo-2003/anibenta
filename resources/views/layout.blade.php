@@ -13,6 +13,9 @@
             <a href="{{ route('home') }}" class="text-white font-bold text-2xl tracking-tight">
                 AniBenta <span class="text-green-200 text-sm">Wholesale</span>
             </a>
+            <a href="{{ route('dashboard.index') }}" class="text-white font-semibold hover:text-green-200 bg-green-700 px-4 py-2 rounded">
+                Proxy Dashboard
+            </a>
         </div>
     </nav>
 
