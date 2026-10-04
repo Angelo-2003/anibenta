@@ -6,13 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Barangay;
 use App\Models\FarmerSubaccount;
 use App\Models\Listing;
+use App\Models\Order;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $farmers = FarmerSubaccount::with('barangay')->get();
-        return view('dashboard', compact('farmers'));
+        
+        // Fetch all orders with their related listing and farmer data
+        $orders = Order::with(['listing.farmerSubaccount', 'listing.barangay'])->latest()->get();
+        
+        return view('dashboard', compact('farmers', 'orders'));
     }
 
     public function storeListing(Request $request)
@@ -29,7 +34,6 @@ class DashboardController extends Controller
             'pickup_hub' => 'required|string',
         ]);
 
-        // Automatically assign the correct Barangay Hub based on the chosen farmer
         $farmer = FarmerSubaccount::findOrFail($request->farmer_subaccount_id);
 
         Listing::create([
@@ -47,5 +51,11 @@ class DashboardController extends Controller
         ]);
 
         return redirect()->route('dashboard.index')->with('success', 'New wholesale listing posted successfully!');
+    }
+
+    public function completeOrder(Order $order)
+    {
+        $order->update(['status' => 'COMPLETED']);
+        return redirect()->route('dashboard.index')->with('success', 'Order from ' . $order->buyer_name . ' marked as completed!');
     }
 }

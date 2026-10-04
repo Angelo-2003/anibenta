@@ -71,4 +71,66 @@
             </div>
         </form>
     </div>
-@endsection
+@
+
+<!-- Active Orders Section -->
+    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 max-w-6xl mx-auto mt-8 overflow-x-auto">
+        <h2 class="text-xl font-bold mb-4 border-b pb-2">Pending Fulfillment Orders</h2>
+        
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-100 text-gray-700 text-sm">
+                    <th class="p-3 border-b">Order ID</th>
+                    <th class="p-3 border-b">Buyer Info</th>
+                    <th class="p-3 border-b">Crop & Farmer</th>
+                    <th class="p-3 border-b">Total & Fees</th>
+                    <th class="p-3 border-b text-center">OTP</th>
+                    <th class="p-3 border-b text-center">Status/Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($orders as $order)
+                    <tr class="border-b hover:bg-gray-50 text-sm">
+                        <td class="p-3 font-bold text-gray-600">#{{ $order->id }}</td>
+                        <td class="p-3">
+                            <p class="font-bold">{{ $order->buyer_name }}</p>
+                            <p class="text-xs text-gray-500">{{ $order->buyer_phone }}</p>
+                            <p class="text-xs text-blue-600 font-semibold mt-1">{{ $order->pickup_method }}</p>
+                        </td>
+                        <td class="p-3">
+                            <p class="font-bold">{{ $order->listing->crop_name }}</p>
+                            <p class="text-xs text-gray-600">{{ $order->quantity_ordered }} {{ $order->listing->unit_type }}s</p>
+                            <p class="text-xs text-gray-500 mt-1">🧑‍🌾 {{ $order->listing->farmerSubaccount->farmer_name }}</p>
+                        </td>
+                        <td class="p-3">
+                            <p class="font-bold text-green-700">₱{{ number_format($order->total_amount, 2) }}</p>
+                            <p class="text-xs text-gray-500">Platform Fee: ₱{{ number_format($order->platform_fee, 2) }}</p>
+                            <p class="text-xs text-gray-500">Farmer Net: ₱{{ number_format($order->farmer_net_payout, 2) }}</p>
+                        </td>
+                        <td class="p-3 text-center">
+                            <span class="bg-yellow-100 text-yellow-800 font-mono font-bold px-2 py-1 rounded tracking-widest">
+                                {{ $order->pickup_otp }}
+                            </span>
+                        </td>
+                        <td class="p-3 text-center">
+                            @if($order->status === 'CONFIRMED')
+                                <form action="{{ route('dashboard.completeOrder', $order->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="bg-green-600 text-white text-xs font-bold px-3 py-2 rounded hover:bg-green-700 transition">
+                                        Release Crop
+                                    </button>
+                                </form>
+                            @else
+                                <span class="text-gray-500 font-bold text-xs bg-gray-200 px-3 py-1 rounded uppercase">{{ $order->status }}</span>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="p-6 text-center text-gray-500 font-bold">No orders placed yet.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>

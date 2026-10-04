@@ -13,3 +13,4 @@ Route::post('/checkout/{listing}', [CheckoutController::class, 'store'])->name('
 // Proxy Dashboard Routes
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::post('/dashboard/listings', [DashboardController::class, 'storeListing'])->name('dashboard.storeListing');
+Route::patch('/dashboard/orders/{order}/complete', [DashboardController::class, 'completeOrder'])->name('dashboard.completeOrder');
